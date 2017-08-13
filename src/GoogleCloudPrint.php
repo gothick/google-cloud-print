@@ -16,7 +16,7 @@ class GoogleCloudPrint {
 	// TODO: When we move to PHP 7.1, we can use access modifiers on 
 	// class constants.
 	const APIBASE = 'https://www.google.com/cloudprint/';
-	
+
 	// TODO: Do we need to keep this hanging around? Or can we just set
 	// up the httpClient and use it without needing the Google_Client?
 	private $google_client;
@@ -36,6 +36,24 @@ class GoogleCloudPrint {
 	// search
 	function printers() {
 		$response = $this->httpClient->request('GET', self::APIBASE . 'search');
+		return (string) $response->getBody();
+	}
+
+	function acceptInvitation($printer_id) {
+		// Thanks for the tip, jr997 and Wolfgang
+		// https://stackoverflow.com/a/36366114/300836
+		// TODO: Error handling. What do we need? It definitely sends us
+		// back some JSON with "success": "false" if it goes wrong; you
+		// can get that by not specifying a printer id.
+		$response = $this->httpClient->request(
+			'POST',
+			self::APIBASE . 'processinvite', [
+					'form_params' => [
+						'printerid' => $printer_id,
+						'accept' => 'true'
+					]
+			]
+		);
 		return (string) $response->getBody();
 	}
 }
