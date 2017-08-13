@@ -12,6 +12,8 @@ require_once __DIR__ . '/../vendor/autoload.php';
  *
  */
 
+use Gothick\GoogleCloudPrint\GoogleCloudPrinter;
+
 class GoogleCloudPrint {
 	// TODO: When we move to PHP 7.1, we can use access modifiers on 
 	// class constants.
@@ -34,9 +36,27 @@ class GoogleCloudPrint {
 	}
 	*/
 	// search
-	function printers() {
-		$response = $this->httpClient->request('GET', self::APIBASE . 'search');
-		return (string) $response->getBody();
+	function printers($search = null) {
+		$params = array();
+		if (!empty($search)) {
+			$params['q'] = $search;
+		}
+		$response = $this->httpClient->request('GET', self::APIBASE . 'search', [
+				'query' => $params
+			]
+		);
+		$jsonobj = json_decode((string) $response->getBody());
+		print_r($jsonobj);
+
+		$printers = array();
+		if ($jsonobj->success) {
+			foreach ($jsonobj->printers as $printer) {
+				$printers[] = new GoogleCloudPrinter($printer->id, $printer->displayName, $printer);
+			}
+		} else {
+			//TODO: Handle error somehow.
+		}
+		return $printers;
 	}
 
 	function acceptInvitation($printer_id) {
