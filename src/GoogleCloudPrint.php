@@ -32,10 +32,38 @@ class GoogleCloudPrint {
 		$this->httpClient = $this->client->authorize();
 	}
 
-	/*function print($document, $type, GoogleCloudPrinter $printer) {
+	/**
+	 * 
+	 * 
+	 * @param unknown $document
+	 * @param string $type
+	 * @param GoogleCloudPrinter $printer
+	 */
+	function submit($document, $content_type, $printer_id, $title = null) {
+		if (empty($title)) {
+			$title = 'Gothick-GoogleCloudPrint-' . (string) microtime();
+		}
+
+		$response = $this->httpClient->request(
+			'POST', 
+			self::APIBASE . 'submit', [
+				'form_params' => [
+						'title' => $title,
+						'printerid' => $printer_id,
+						'contentType' => $content_type,
+						'contentTransferEncoding' => 'base64',
+						'content' => base64_encode((string) $document)
+				]
+			]
+		);
+		echo (string) $response->getBody();
 	}
-	*/
-	// search
+
+	/**
+	 * 
+	 * @param unknown $search
+	 * @return \Gothick\GoogleCloudPrint\GoogleCloudPrinter[]
+	 */
 	function printers($search = null) {
 		$params = array();
 		if (!empty($search)) {
