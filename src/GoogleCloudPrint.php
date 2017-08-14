@@ -66,7 +66,7 @@ class GoogleCloudPrint {
 	 * @param unknown $search Search parameters, e.g. "Brother"
 	 * @return \Gothick\GoogleCloudPrint\GoogleCloudPrinter[]
 	 */
-	function printers($search = null) {
+	function search($search = null) {
 		// TODO: Allow passing of all the standard parameters. Perhaps 
 		// chuck in an array and do an array_merge here of defaults?
 		$params = array();
