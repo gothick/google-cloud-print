@@ -12,8 +12,6 @@ require_once __DIR__ . '/../vendor/autoload.php';
  *
  */
 
-use Gothick\GoogleCloudPrint\GoogleCloudPrinter;
-
 class GoogleCloudPrint {
 	// TODO: When we move to PHP 7.1, we can use access modifiers on 
 	// class constants.
@@ -33,9 +31,9 @@ class GoogleCloudPrint {
 	}
 
 	/**
+	 * Submit a document to a print queue.
 	 * 
-	 * 
-	 * @param unknown $document
+	 * @param StreamInterface $document
 	 * @param string $type
 	 * @param GoogleCloudPrinter $printer
 	 */
@@ -52,19 +50,25 @@ class GoogleCloudPrint {
 						'printerid' => $printer_id,
 						'contentType' => $content_type,
 						'contentTransferEncoding' => 'base64',
+						// TODO: When Guzzle has an obvious way of adding a stream filter like
+						// base64, use the actual stream rather than converting the whole thing
+						// to a string in memory.
 						'content' => base64_encode((string) $document)
 				]
 			]
 		);
-		echo (string) $response->getBody();
+		// TODO: Error checking
 	}
 
 	/**
+	 * Search for printers
 	 * 
-	 * @param unknown $search
+	 * @param unknown $search Search parameters, e.g. "Brother"
 	 * @return \Gothick\GoogleCloudPrint\GoogleCloudPrinter[]
 	 */
 	function printers($search = null) {
+		// TODO: Allow passing of all the standard parameters. Perhaps 
+		// chuck in an array and do an array_merge here of defaults?
 		$params = array();
 		if (!empty($search)) {
 			$params['q'] = $search;
@@ -88,6 +92,13 @@ class GoogleCloudPrint {
 		return $printers;
 	}
 
+	/**
+	 * Simple utility function for accepting invitations to a printer. Useful
+	 * for the initial sharing of your printer with your Service Account.
+	 * 
+	 * @param int $printer_id
+	 * @return string
+	 */
 	function acceptInvitation($printer_id) {
 		// Thanks for the tip, jr997 and Wolfgang
 		// https://stackoverflow.com/a/36366114/300836
