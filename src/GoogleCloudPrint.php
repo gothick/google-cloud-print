@@ -46,15 +46,16 @@ class GoogleCloudPrint {
 			]
 		);
 		$jsonobj = json_decode((string) $response->getBody());
-		print_r($jsonobj);
 
 		$printers = array();
 		if ($jsonobj->success) {
-			foreach ($jsonobj->printers as $printer) {
-				$printers[] = new GoogleCloudPrinter($printer->id, $printer->displayName, $printer);
+			if (isset($jsonobj->printers)) {
+				foreach ($jsonobj->printers as $printer) {
+					$printers[] = new GoogleCloudPrinter($printer);
+				}
 			}
 		} else {
-			//TODO: Handle error somehow.
+			//TODO: Handle errors somehow.
 		}
 		return $printers;
 	}

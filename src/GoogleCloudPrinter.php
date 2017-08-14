@@ -5,20 +5,19 @@ namespace Gothick\GoogleCloudPrint;
 require_once __DIR__ . '/../vendor/autoload.php';
 
 class GoogleCloudPrinter {
-	private $id;
-	private $display_name;
-	private $details;
+	private $printer;
 
-	// TODO: Maybe just throw JSON at this and have it rehydrate?
-	function __construct($id, $display_name, $details) {
-		$this->id = $id;
-		$this->display_name = $display_name;
-		$this->details = $details;
+	/**
+	 *
+	 * @param stdClass $printer PHP object hydrated from JSON returned by GoogleCloudPrint's /search.
+	 */
+	function __construct($printer) {
+		$this->printer = $printer;
 	}
-	public function displayName() {
-		return $this->display_name;
+	public function __get($name) {
+		return $this->printer->$name;
 	}
-	public function id() {
-		return $this->id;
+	public function __isset($name) {
+		return isset($this->printer->$name);
 	}
 }
