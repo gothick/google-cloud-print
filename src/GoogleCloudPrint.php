@@ -2,8 +2,6 @@
 
 namespace Gothick\GoogleCloudPrint;
 
-require_once __DIR__ . '/../vendor/autoload.php';
-
 /**
  * You *must* set GOOGLE_APPLICATION_CREDENTIALS to the path of a service account's key (JSON format)
  * before constructing a GoogleCloudPrint.
