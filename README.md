@@ -1,6 +1,12 @@
 # google-cloud-print
 
-Minimal Google Cloud Print client for PHP. Mostly for my own use, but
-I figured it might be handy for other people. PSR-4 compliant, uses a
-service account to authenticate.
+This is a tiny, bare minimal Google Cloud Print PHP client that can discover a printer,
+print a PDF, accept an invitation to a shared printer, and that's about it. It uses
+a Service Account for authentication. 
+
+It's got no error handling and is only here because I needed one for a tiny project
+of mine to print my morning crossword out. However, given the paucity of information 
+on using Google Cloud Print, especially with a service account, I figured I might
+make it public in case it helped anyone else along the way.
+
 

@@ -1,6 +1,6 @@
 {
   "name": "gothick/google-cloud-print",
-  "version": "dev-master",
+  "version": "1.0.0",
   "description": "Minimal Google Cloud Print client for PHP",
   "license" : "MIT",
   "keywords": ["print", "Google Cloud Print"],
