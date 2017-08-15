@@ -13,7 +13,7 @@ namespace Gothick\GoogleCloudPrint;
 class GoogleCloudPrint {
 	// TODO: When we move to PHP 7.1, we can use access modifiers on 
 	// class constants.
-	const APIBASE = 'https://www.google.com/cloudprint/';
+	const APIBASE = 'https://www.google.com/cloudprint';
 
 	// TODO: Do we need to keep this hanging around? Or can we just set
 	// up the httpClient and use it without needing the Google_Client?
@@ -42,7 +42,7 @@ class GoogleCloudPrint {
 
 		$response = $this->httpClient->request(
 			'POST', 
-			self::APIBASE . 'submit', [
+			self::APIBASE . '/submit', [
 				'form_params' => [
 						'title' => $title,
 						'printerid' => $printer_id,
@@ -71,7 +71,7 @@ class GoogleCloudPrint {
 		if (!empty($search)) {
 			$params['q'] = $search;
 		}
-		$response = $this->httpClient->request('GET', self::APIBASE . 'search', [
+		$response = $this->httpClient->request('GET', self::APIBASE . '/search', [
 				'query' => $params
 			]
 		);
@@ -89,6 +89,24 @@ class GoogleCloudPrint {
 		}
 		return $printers;
 	}
+	
+	/**
+	 * Mostly for my own debugging and other edification, return the JSON
+	 * representation of the specicfied printer's capabilities.
+	 *
+	 * @return \GuzzleHttp\Psr7\Stream
+	 * @param string $printer_id
+	 * @param array $extra_fields
+	 */
+	function printer($printer_id, $extra_fields = array()) {
+		$response = $this->httpClient->request('GET', self::APIBASE . '/printer', [
+				'query' => [
+						'printerid' => $printer_id,
+						'extra_fields' => implode(",", $extra_fields)
+				]
+		]);
+		return (string) $response->getBody();
+	}
 
 	/**
 	 * Simple utility function for accepting invitations to a printer. Useful
@@ -105,7 +123,7 @@ class GoogleCloudPrint {
 		// can get that by not specifying a printer id.
 		$response = $this->httpClient->request(
 			'POST',
-			self::APIBASE . 'processinvite', [
+			self::APIBASE . '/processinvite', [
 					'form_params' => [
 						'printerid' => $printer_id,
 						'accept' => 'true'
