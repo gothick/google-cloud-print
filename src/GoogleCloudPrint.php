@@ -55,7 +55,11 @@ class GoogleCloudPrint {
 				]
 			]
 		);
-		// TODO: Error checking
+        if ($response->getStatusCode() != 200) {
+            throw new \Exception("Invalid HTTP status code (" . $response->getStatusCode() . ") on submission.");
+        }
+        $response_obj = json_decode($response->getBody());
+        return $response_obj;
 	}
 
 	/**
